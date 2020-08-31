@@ -1,0 +1,19 @@
+body {
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#start-screen {
+  border: 1px solid black;
+  border-radius: 8px;
+}
+
+canvas {
+  border: 1px solid black;
+  border-radius: 8px;
+}
