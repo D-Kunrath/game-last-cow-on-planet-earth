@@ -8,6 +8,7 @@ window.onload = () => {
     background = new Background(canvasWidth, canvasHeight);
     player = new Cow(canvasWidth, canvasHeight);
     ufo = new FlyingSaucer(canvasWidth, canvasHeight);
+    soundboard = new SoundBoard();
     gameArea.start();
   }
 
@@ -27,6 +28,7 @@ window.onload = () => {
     }
     if (gameArea.rayFrames == 60) {
       ufo.speed += 0.005;
+      soundboard.playBeam();
       gameArea.score++;
     }
   }
@@ -50,6 +52,7 @@ window.onload = () => {
       gameArea.rayFrames--;
       if (gameArea.rayFrames <= 0) {
         gameArea.rayTrigger = false;
+        soundboard.stopBeam();
       }
     }
   }
@@ -128,6 +131,7 @@ window.onload = () => {
 
     // first loading of game screen and calls game loop
     start: function () {
+      soundboard.playBGM();
       this.drawCanvas();
       this.reqGameAnimation = window.requestAnimationFrame(updateGameArea);
     },
@@ -168,7 +172,7 @@ window.onload = () => {
     this.height = 40;
     this.speed = 0.1;
     this.step = 20;
-    this.lastKeyPressed = "right";
+    this.lastKeyPressed = "left";
 
     this.drawCow = () => {
       this.drawHoves();
@@ -184,13 +188,31 @@ window.onload = () => {
       ctx.strokeStyle = "black";
       ctx.strokeRect(this.posX, this.posY, this.width, this.height);
       ctx.fillRect(this.posX + 12, this.posY + 7, 12, 7);
+
+      ctx.fillStyle = "black";
+      if (this.lastKeyPressed == "left") {
+        ctx.fillRect(this.posX + 39, this.posY + 3, 10, 13);
+        ctx.fillRect(this.posX + 30, this.posY + 9, 13, 15);
+      }
+      if (this.lastKeyPressed == "right") {
+        ctx.fillRect(this.posX + this.width - 49, this.posY + 3, 10, 13);
+        ctx.fillRect(this.posX + this.width - 43, this.posY + 9, 13, 15);
+      }
     };
 
     this.drawHead = () => {
       this.dWidth = 30;
       this.dHeight = 40;
-      this.dPosX = this.posX - this.dWidth * 0.5;
-      this.dPosY = this.posY - this.dHeight * 0.3;
+
+      if (this.lastKeyPressed == "left") {
+        this.dPosX = this.posX - this.dWidth * 0.5;
+        this.dPosY = this.posY - this.dHeight * 0.3;
+      }
+      if (this.lastKeyPressed == "right") {
+        this.dPosX = this.posX - this.dWidth * 0.5 + this.width;
+        this.dPosY = this.posY - this.dHeight * 0.3;
+      }
+
       const ctx = gameArea.context;
 
       ctx.fillStyle = "#efefef";
@@ -265,14 +287,38 @@ window.onload = () => {
     };
 
     this.drawTail = () => {
-      this.dPosX = this.posX + this.width;
-      this.dPosY = this.posY + this.height * 0.1;
+      if (this.lastKeyPressed == "left") {
+        this.dPosX = this.posX + this.width;
+        this.dPosY = this.posY + this.height * 0.1;
+      }
+      if (this.lastKeyPressed == "right") {
+        this.dPosX = this.posX;
+        this.dPosY = this.posY + this.height * 0.1;
+      }
+
       const ctx = gameArea.context;
       ctx.strokeStyle = "black";
-      ctx.beginPath();
-      ctx.moveTo(this.dPosX, this.dPosY);
-      ctx.lineTo(this.dPosX + 10, this.dPosY + 25);
-      ctx.stroke();
+
+      if (gameArea.rayTrigger) {
+        this.tailEnd = -25;
+      } else {
+        this.tailEnd = 25;
+      }
+
+      if (this.lastKeyPressed == "left") {
+        ctx.beginPath();
+        ctx.moveTo(this.dPosX, this.dPosY);
+        ctx.lineTo(this.dPosX + 10, this.dPosY + this.tailEnd);
+        ctx.closePath();
+        ctx.stroke();
+      }
+      if (this.lastKeyPressed == "right") {
+        ctx.beginPath();
+        ctx.moveTo(this.dPosX, this.dPosY);
+        ctx.lineTo(this.dPosX - 10, this.dPosY + this.tailEnd);
+        ctx.closePath();
+        ctx.stroke();
+      }
     };
 
     this.drawHoves = () => {
@@ -488,15 +534,19 @@ window.onload = () => {
     if (!player.isCaught(ufo)) {
       if (keyPressed.keyCode == 65 || keyPressed.keyCode == 37) {
         player.moveLeft();
+        player.lastKeyPressed = "left";
       }
       if (keyPressed.keyCode == 87 || keyPressed.keyCode == 38) {
         player.moveUp();
+        // player.lastKeyPressed = "up";
       }
       if (keyPressed.keyCode == 68 || keyPressed.keyCode == 39) {
         player.moveRight();
+        player.lastKeyPressed = "right";
       }
       if (keyPressed.keyCode == 83 || keyPressed.keyCode == 40) {
         player.moveDown();
+        // player.lastKeyPressed = "down";
       }
     }
   });
@@ -504,12 +554,49 @@ window.onload = () => {
   // restart button
   document.addEventListener("click", (event) => {
     const elem = document.getElementById("game-canvas");
-    const elemLft = elem.offsetLeft;
-    const elemTop = elem.offsetTop;
-    let x = event.pageX - elemLft;
-    let y = event.pageY - elemTop;
-    if (gameArea.gameEnded && x > 240 && x < 360 && y > 430 && y < 465) {
-      gameArea.restartGame();
+    if (elem) {
+      const elemLft = elem.offsetLeft;
+      const elemTop = elem.offsetTop;
+      let x = event.pageX - elemLft;
+      let y = event.pageY - elemTop;
+      if (gameArea.gameEnded && x > 240 && x < 360 && y > 430 && y < 465) {
+        gameArea.restartGame();
+      }
     }
   });
+
+  // sound board
+  function SoundBoard() {
+    this.bgm = document.createElement("audio");
+    this.bgm.src = "../sounds/The Alien Whistle.wav";
+    this.bgm.setAttribute("preload", "auto");
+    this.bgm.setAttribute("constrols", "none");
+    this.bgm.loop = true;
+    this.bgm.style.display = "none";
+    this.bgm.volume = 0.1;
+    this.playBGM = () => {
+      this.bgm.play();
+    };
+    this.stopBGM = () => {
+      this.bgm.pause();
+    };
+
+    this.beam = document.createElement("audio");
+    this.beam.src =
+      "../sounds/221517__alaskarobotics__sci-fi-alien-ufo-warble.wav";
+    this.beam.setAttribute("preload", "auto");
+    this.beam.setAttribute("constrols", "none");
+    this.beam.style.display = "none";
+    this.beam.volume = 0.05;
+    this.playBeam = () => {
+      if (this.beam.paused) {
+        this.beam.play();
+      } else {
+        this.beam.currentTime = 0;
+      }
+    };
+    this.stopBeam = () => {
+      this.beam.pause();
+    };
+  }
 };
