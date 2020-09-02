@@ -15,7 +15,7 @@
 ## Movement Controls
 
 - W, A, S, D
-- Arrow Keys: :arrow-left:, :arrow-up:, :arrow-right:, :arrow-down:
+- Arrow Keys: :arrow_left:, :arrow_up:, :arrow_right:, :arrow_down:
 
 ---
 
