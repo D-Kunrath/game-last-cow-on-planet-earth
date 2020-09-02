@@ -1,16 +1,48 @@
+@font-face {
+  font-family: "Arcade";
+  src: url("../fonts/Arcade.ttf");
+}
+
 body {
+  font-family: Arcade;
   text-align: center;
+  color: white;
+}
+
+h1 {
+  font-size: 72px;
+}
+
+span {
+  font-size: 30px;
+  align-self: flex-start;
+  margin-left: 10px;
+  margin-bottom: 15px;
+}
+
+a {
+  font-size: 30px;
+  color: white;
+  margin-bottom: 35px;
+  text-decoration: none;
 }
 
 .container {
   display: flex;
   justify-content: center;
-  align-items: center;
 }
 
 #start-screen {
   border: 1px solid black;
   border-radius: 8px;
+  width: 600px;
+  height: 500px;
+  background-image: url("../images/startscreen.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 canvas {
