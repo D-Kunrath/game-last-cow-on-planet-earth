@@ -2,7 +2,7 @@
 
 (my Ironhack project for module 1)
 
-![Build Status](../images/startscreen.png)
+![Build Status](./images/startscreen.png)
 
 ---
 
