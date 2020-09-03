@@ -523,7 +523,7 @@ window.onload = () => {
   // sound board
   function SoundBoard() {
     this.bgm = document.createElement("audio");
-    this.bgm.src = "../sounds/The Alien Whistle.wav";
+    this.bgm.src = "./sounds/The Alien Whistle.wav";
     this.bgm.setAttribute("preload", "auto");
     this.bgm.setAttribute("controls", "none");
     this.bgm.loop = true;
@@ -538,7 +538,7 @@ window.onload = () => {
 
     this.beam = document.createElement("audio");
     this.beam.src =
-      "../sounds/221517__alaskarobotics__sci-fi-alien-ufo-warble.wav";
+      "./sounds/221517__alaskarobotics__sci-fi-alien-ufo-warble.wav";
     this.beam.setAttribute("preload", "auto");
     this.beam.setAttribute("controls", "none");
     this.beam.style.display = "none";
