@@ -573,7 +573,7 @@ window.onload = () => {
     this.bgm.setAttribute("constrols", "none");
     this.bgm.loop = true;
     this.bgm.style.display = "none";
-    this.bgm.volume = 0.1;
+    this.bgm.volume = 0.2;
     this.playBGM = () => {
       this.bgm.play();
     };
@@ -587,7 +587,7 @@ window.onload = () => {
     this.beam.setAttribute("preload", "auto");
     this.beam.setAttribute("constrols", "none");
     this.beam.style.display = "none";
-    this.beam.volume = 0.05;
+    this.beam.volume = 0.2;
     this.playBeam = () => {
       if (this.beam.paused) {
         this.beam.play();
