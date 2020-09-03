@@ -2,7 +2,9 @@
 
 (my Ironhack project for module 1)
 
-![Build Status](./images/startscreen.png)
+![Start Screen](./images/startscreen.png)
+
+Click [HERE](https://d-kunrath.github.io/project-ironhack-game/) to play **Last Cow On Planet Earth**
 
 ---
 

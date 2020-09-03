@@ -1,6 +1,7 @@
 window.onload = () => {
   /* "global" variables & functions
    ********************************/
+
   // starts the game and sets the initial setup
   function startGame() {
     canvasWidth = 600;
@@ -144,6 +145,7 @@ window.onload = () => {
     // completely stops the game
     stop: function () {
       window.cancelAnimationFrame(this.reqGameAnimation);
+      soundboard.stopBGM();
       this.gameOver();
     },
 
@@ -155,14 +157,14 @@ window.onload = () => {
 
     // restarts the game after 1500 milliseconds
     restartGame: function () {
-      window.location.reload(false);
+      // window.location.reload(false);
       resetProps();
       document.getElementById("game-screen").style.display = "none";
-      document.getElementById("start-screen").style.display = "block";
+      document.getElementById("start-screen").style.display = "flex";
     },
   };
 
-  // cow object function
+  // cow object
   function Cow(x, y) {
     this.posX = x * 0.2;
     this.posY = y * 0.8;
@@ -518,6 +520,41 @@ window.onload = () => {
     };
   }
 
+  // sound board
+  function SoundBoard() {
+    this.bgm = document.createElement("audio");
+    this.bgm.src = "../sounds/The Alien Whistle.wav";
+    this.bgm.setAttribute("preload", "auto");
+    this.bgm.setAttribute("controls", "none");
+    this.bgm.loop = true;
+    this.bgm.style.display = "none";
+    this.bgm.volume = 0.2;
+    this.playBGM = () => {
+      this.bgm.play();
+    };
+    this.stopBGM = () => {
+      this.bgm.pause();
+    };
+
+    this.beam = document.createElement("audio");
+    this.beam.src =
+      "../sounds/221517__alaskarobotics__sci-fi-alien-ufo-warble.wav";
+    this.beam.setAttribute("preload", "auto");
+    this.beam.setAttribute("controls", "none");
+    this.beam.style.display = "none";
+    this.beam.volume = 0.2;
+    this.playBeam = () => {
+      if (this.beam.paused) {
+        this.beam.play();
+      } else {
+        this.beam.currentTime = 0;
+      }
+    };
+    this.stopBeam = () => {
+      this.beam.pause();
+    };
+  }
+
   /* event listeners
    *****************/
   // start button
@@ -564,39 +601,4 @@ window.onload = () => {
       }
     }
   });
-
-  // sound board
-  function SoundBoard() {
-    this.bgm = document.createElement("audio");
-    this.bgm.src = "../sounds/The Alien Whistle.wav";
-    this.bgm.setAttribute("preload", "auto");
-    this.bgm.setAttribute("constrols", "none");
-    this.bgm.loop = true;
-    this.bgm.style.display = "none";
-    this.bgm.volume = 0.1;
-    this.playBGM = () => {
-      this.bgm.play();
-    };
-    this.stopBGM = () => {
-      this.bgm.pause();
-    };
-
-    this.beam = document.createElement("audio");
-    this.beam.src =
-      "../sounds/221517__alaskarobotics__sci-fi-alien-ufo-warble.wav";
-    this.beam.setAttribute("preload", "auto");
-    this.beam.setAttribute("constrols", "none");
-    this.beam.style.display = "none";
-    this.beam.volume = 0.05;
-    this.playBeam = () => {
-      if (this.beam.paused) {
-        this.beam.play();
-      } else {
-        this.beam.currentTime = 0;
-      }
-    };
-    this.stopBeam = () => {
-      this.beam.pause();
-    };
-  }
 };
