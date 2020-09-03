@@ -528,7 +528,7 @@ window.onload = () => {
     this.bgm.setAttribute("controls", "none");
     this.bgm.loop = true;
     this.bgm.style.display = "none";
-    this.bgm.volume = 0.2;
+    this.bgm.volume = 0.1;
     this.playBGM = () => {
       this.bgm.play();
     };
@@ -542,7 +542,7 @@ window.onload = () => {
     this.beam.setAttribute("preload", "auto");
     this.beam.setAttribute("controls", "none");
     this.beam.style.display = "none";
-    this.beam.volume = 0.2;
+    this.beam.volume = 0.06;
     this.playBeam = () => {
       if (this.beam.paused) {
         this.beam.play();
@@ -568,7 +568,7 @@ window.onload = () => {
   document.addEventListener("keydown", (keyPressed) => {
     // key codes: a = 65, w = 87, d = 68, s = 83
     // left = 37, up = 38, right = 39, down = 40
-    if (!player.isCaught(ufo)) {
+    if (!player.isCaught(ufo) && gameArea.frames > 0) {
       if (keyPressed.keyCode == 65 || keyPressed.keyCode == 37) {
         player.moveLeft();
         player.lastKeyPressed = "left";
